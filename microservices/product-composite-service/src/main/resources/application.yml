@@ -1,7 +1,7 @@
 springdoc:
   swagger-ui.path: /openapi/swagger-ui.html
   api-docs.path: /openapi/v3/api-docs
-  packagesToScan: se.magnus.microservices.composite.product
+  packagesToScan: com.lmarch.microservices.composite.product
   pathsToMatch: /**
 
 api:
@@ -28,7 +28,6 @@ api:
     unprocessableEntity.description: Unprocessable entity, input parameters caused the processing to fail. See response message for more information
 
   product-composite:
-
     get-composite-product:
       description: Returns a composite view of the specified product id
       notes: |
