@@ -1,46 +1,44 @@
-# Adding REST full APIs
 
-# Implementing API
-### Add the api and util projects as dependencies to our build.gradle file
 
-`dependencies {
-  implementation project(':api')
-  implementation project(':util')
-`
-### Detect Spring Beans in the api and util projects
-To enable Spring Boot’s autoconfiguration feature to detect Spring Beans in the api and util
-projects, we also need to add a @ComponentScan annotation to the main application class, which
-includes the packages of the api and util projects
+# Build and start the microservice product
+`cd <field of project>` <br>
+`./gradlew build` <br>
+`java -jar microservices/product-service/build/libs/*.jar &`
 
-`@SpringBootApplication
-@ComponentScan("se.magnus")
-public class ProductServiceApplication {
-`
-
-### Create our service implementation file
-Create our service implementation file, ProductServiceImpl.java, in order to implement
-the Java interface, ProductService, from the api project and annotate the class with
-@RestController so that Spring will call the methods in this class according to the mappings
-specified in the Interface class
-
-### Add to the property file application.yml
-Need to set up some runtime properties – what port to use and the desired
-level of logging.
-
-`
-server.port: 7003
-server.error.include-message: always
-logging:
-level:
-root: INFO
-com.lmarch: DEBUG
-`
-### Build and start the microservice
-`
-cd <field of project>
-./gradlew build
-java -jar microservices/product-service/build/libs/*.jar &
-`
-Make a test call to the product service:
-
+### Make a test call to the product service:
 `curl http://localhost:7001/product/123`
+
+# Docker
+`./gradlew clean build`
+`docker-compose build`
+`docker-compose up -d`
+`docker ps`
+`docker-compose restart product`
+`docker-compose down`
+### Logging
+`docker-compose logs -f`
+`docker-compose logs product review`
+### Running tests
+`./gradlew clean build && docker-compose build && ./test-em-all.bash start stop`
+
+### Make a test call to the product-composite service:
+`curl localhost:8080/product-composite/123 -s | jq .`
+
+# OpenAPI documentation
+Before need to build and start the microservice landscape.
+This can be done with the following commands:
+
+`cd skeleton`<br>
+`./gradlew clean build && docker-compose build && docker-compose up -d`
+
+### Stop the microservice landscape.
+`docker-compose down`
+
+### Run tests
+if the microservice landscape is not starting
+
+`./test-em-all.bash start stop`
+
+else
+
+`./test-em-all.bash`
