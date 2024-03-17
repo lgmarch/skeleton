@@ -1,10 +1,8 @@
 package com.lmarch.util.http;
 
+import com.lmarch.api.exceptions.BadRequestException;
 import com.lmarch.api.exceptions.InvalidInputException;
 import com.lmarch.api.exceptions.NotFoundException;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +14,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public @ResponseBody HttpErrorInfo handleBadRequestExceptions(ServerHttpRequest request, BadRequestException ex) {
+        return createHttpErrorInfo(BAD_REQUEST, request, ex);
+    }
 
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
