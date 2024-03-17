@@ -21,7 +21,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
     @Autowired
     public ProductCompositeServiceImpl(
-            ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
+        ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
         this.serviceUtil = serviceUtil;
         this.integration = integration;
     }
@@ -37,15 +37,15 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         List<Review> reviews = integration.getReviews(productId);
 
         return createProductAggregate(product, recommendations,reviews,
-                serviceUtil.getServiceAddress());
+            serviceUtil.getServiceAddress());
 
     }
 
     private ProductAggregate createProductAggregate(
-            Product product,
-            List<Recommendation> recommendations,
-            List<Review> reviews,
-            String serviceAddress) {
+        Product product,
+        List<Recommendation> recommendations,
+        List<Review> reviews,
+        String serviceAddress) {
 
         // 1. Setup product info
         int productId = product.getProductId();
@@ -54,17 +54,17 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         // 2. Copy summary recommendation info, if available
         List<RecommendationSummary> recommendationSummaries =
-                (recommendations == null) ? null : recommendations
-                        .stream()
-                        .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate()))
-                        .collect(Collectors.toList());
+            (recommendations == null) ? null : recommendations
+                .stream()
+                .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate()))
+                .collect(Collectors.toList());
 
         // 3. Copy summary review info, if available
         List<ReviewSummary> reviewSummaries =
-                (reviews == null) ? null : reviews
-                        .stream()
-                        .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject()))
-                        .collect(Collectors.toList());
+            (reviews == null) ? null : reviews
+                .stream()
+                .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject()))
+                .collect(Collectors.toList());
 
         // 4. Create info regarding the involved microservices addresses
         String productAddress = product.getServiceAddress();
