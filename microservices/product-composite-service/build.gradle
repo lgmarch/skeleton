@@ -7,6 +7,10 @@ plugins {
 group = 'com.lmarch.microservices.composite.product'
 version = '1.0.0-SNAPSHOT'
 
+ext {
+	mapstructVersion = "1.5.5.Final"
+}
+
 java {
 	sourceCompatibility = '17'
 }
@@ -25,6 +29,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0'
+	implementation 'org.mapstruct:mapstruct:${mapstructVersion}'
+
+	compileOnly 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
+	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 }
