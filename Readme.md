@@ -14,10 +14,13 @@
 `docker-compose up -d`
 `docker ps`
 `docker-compose restart product`
+Stop the microservice landscape.
 `docker-compose down`
+
 ### Logging
 `docker-compose logs -f`
 `docker-compose logs product review`
+
 ### Running tests
 `./gradlew clean build && docker-compose build && ./test-em-all.bash start stop`
 
@@ -31,8 +34,8 @@ This can be done with the following commands:
 `cd skeleton`<br>
 `./gradlew clean build && docker-compose build && docker-compose up -d`
 
-### Stop the microservice landscape.
-`docker-compose down`
+### 
+<a href="http://localhost:8080/openapi/swagger-ui.html">Open API</a>
 
 ### Run tests
 if the microservice landscape is not starting
