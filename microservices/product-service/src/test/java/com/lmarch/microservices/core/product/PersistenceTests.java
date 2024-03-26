@@ -45,14 +45,15 @@ public class PersistenceTests extends MongoDbTestBase{
         repository.save(newEntity);
 
         ProductEntity foundEntity = repository.findById(newEntity.getId()).get();
-        assertEqualsProduct(newEntity, foundEntity);
 
+        assertEqualsProduct(newEntity, foundEntity);
         assertEquals(2, repository.count());
     }
 
     @Test
     void getByProductId() {
         Optional<ProductEntity> entity = repository.findByProductId(savedEntity.getProductId());
+
         assertTrue(entity.isPresent());
         assertEqualsProduct(savedEntity, entity.get());
     }
@@ -63,6 +64,7 @@ public class PersistenceTests extends MongoDbTestBase{
         repository.save(savedEntity);
 
         ProductEntity foundEntity = repository.findById(savedEntity.getId()).get();
+
         assertEquals(1, (long)foundEntity.getVersion());
         assertEquals("n2", foundEntity.getName());
     }
@@ -119,7 +121,7 @@ public class PersistenceTests extends MongoDbTestBase{
         Pageable nextPage = PageRequest.of(0, 4, ASC, "productId");
         nextPage = testNextPage(nextPage, "[1001, 1002, 1003, 1004]", true);
         nextPage = testNextPage(nextPage, "[1005, 1006, 1007, 1008]", true);
-        nextPage = testNextPage(nextPage, "[1009, 1010]", false);
+        testNextPage(nextPage, "[1009, 1010]", false);
     }
 
     private Pageable testNextPage(Pageable nextPage, String expectedProductIds, boolean expectsNextPage) {
