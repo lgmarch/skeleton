@@ -84,7 +84,7 @@ public class ProductCompositeIntegration  implements ProductService, Recommendat
     public Product getProduct(int productId) {
 
         try {
-            String url = productServiceUrl + productId;
+            String url = productServiceUrl + "/" + productId;
             LOGGER.debug("Will call getProduct API on URL: {}", url);
 
             Product product = restTemplate.getForObject(url, Product.class);
@@ -109,7 +109,7 @@ public class ProductCompositeIntegration  implements ProductService, Recommendat
     @Override
     public void deleteProduct(int productId) {
         try {
-            String url = productServiceUrl + "/" + "productId";
+            String url = productServiceUrl + "/" + productId;
             LOGGER.debug("Will call the deleteProduct API on URL: {}", url);
 
             restTemplate.delete(url);

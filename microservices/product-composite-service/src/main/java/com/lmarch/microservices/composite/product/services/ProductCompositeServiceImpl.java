@@ -72,7 +72,6 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         List<Review> reviews = integration.getReviews(productId);
 
         return createProductAggregate(product, recommendations,reviews, serviceUtil.getServiceAddress());
-
     }
 
     @Override
@@ -84,7 +83,6 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         integration.deleteReviews(productId);
 
         LOGGER.debug("deleteCompositeProduct: aggregate entities deleted for productId: {}", productId);
-
     }
 
     private ProductAggregate createProductAggregate(
