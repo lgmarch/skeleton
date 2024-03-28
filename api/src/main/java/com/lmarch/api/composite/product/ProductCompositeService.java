@@ -26,7 +26,7 @@ public interface ProductCompositeService {
         @ApiResponse(responseCode = "400", description = "${api.responseCodes.badRequest.description}"),
         @ApiResponse(responseCode = "422", description = "${api.responseCodes.unprocessableEntity.description}")
     })
-    @PostMapping(value = "/product-composite", consumes = "application/json")
+    @PostMapping(value = "/product-composite/", consumes = "application/json")
     void createProduct(@RequestBody ProductAggregate body);
 
     /**
