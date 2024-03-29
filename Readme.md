@@ -9,15 +9,19 @@
 `curl http://localhost:7001/product/123`
 
 # Docker
-`./gradlew clean build`
-`docker-compose build`
-`docker-compose up -d`
+Start the microservice landscape.
+`cd skeleton`<br>
+`./gradlew clean build && docker-compose build && docker-compose up -d`
+
 `docker ps`
 `docker-compose restart product`
+Stop the microservice landscape.
 `docker-compose down`
+
 ### Logging
 `docker-compose logs -f`
 `docker-compose logs product review`
+
 ### Running tests
 `./gradlew clean build && docker-compose build && ./test-em-all.bash start stop`
 
@@ -28,11 +32,13 @@
 Before need to build and start the microservice landscape.
 This can be done with the following commands:
 
-`cd skeleton`<br>
+`cd skeleton`
+
 `./gradlew clean build && docker-compose build && docker-compose up -d`
 
-### Stop the microservice landscape.
-`docker-compose down`
+http://localhost:8080/openapi/swagger-ui.html
+
+<a href="http://localhost:8080/openapi/swagger-ui.html">Open API</a>
 
 ### Run tests
 if the microservice landscape is not starting
@@ -42,3 +48,26 @@ if the microservice landscape is not starting
 else
 
 `./test-em-all.bash`
+
+## Start the system landscape (all microservices)
+### The MongoDB and MySQL CLI tools
+To start the MongoDB CLI tool and mongo, inside the mongodb container, run the following command:
+
+`
+docker-compose exec mongodb mongosh ––quiet
+`
+Введите exit, чтобы покинуть интерфейс mongo CLI.
+To start the MySQL CLI tool, mysql, inside the mysql container and log in to review-db using the user
+created at startup, run the following command:
+
+`
+docker-compose exec mysql mysql -uuser -p review-db
+`
+
+Enter exit to leave the mysql CLI.
+
+Build and start the system landscape with the following command:
+
+`
+./gradlew build && docker-compose build && docker-compose up
+`

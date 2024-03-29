@@ -7,6 +7,9 @@ import com.lmarch.api.core.review.Review;
 import com.lmarch.api.exceptions.NotFoundException;
 import com.lmarch.util.http.ServiceUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,14 +19,46 @@ import java.util.stream.Collectors;
 @RestController
 public class ProductCompositeServiceImpl implements ProductCompositeService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductCompositeServiceImpl.class);
+
     private final ServiceUtil serviceUtil;
     private final ProductCompositeIntegration integration;
 
     @Autowired
-    public ProductCompositeServiceImpl(
-        ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
+    public ProductCompositeServiceImpl(ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
         this.serviceUtil = serviceUtil;
         this.integration = integration;
+    }
+
+    @Override
+    public void createProduct(ProductAggregate body) {
+        try {
+            LOGGER.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
+
+            Product product = new Product(body.getProductId(), body.getName(), body.getWeight(), null);
+            integration.createProduct(product);
+
+            if (body.getRecommendations() != null) {
+                body.getRecommendations().forEach(r -> {
+                    Recommendation recommendation = new Recommendation(body.getProductId(), r.getRecommendationId(), r.getAuthor(), r.getRate(), r.getContent(), null);
+                    integration.createRecommendation(recommendation);
+                });
+            }
+
+            if (body.getReviews() != null) {
+                body.getReviews().forEach(r -> {
+                    Review review = new Review(body.getProductId(), r.getReviewId(), r.getAuthor(), r.getSubject(), r.getContent(), null);
+                    integration.createReview(review);
+                });
+            }
+
+            LOGGER.debug("createCompositeProduct: composite entities created for productId: {}", body.getProductId());
+
+        } catch (RuntimeException re) {
+            LOGGER.warn("createCompositeProduct failed", re);
+
+            throw re;
+        }
     }
 
     @Override
@@ -36,9 +71,18 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         List<Recommendation> recommendations = integration.getRecommendations(productId);
         List<Review> reviews = integration.getReviews(productId);
 
-        return createProductAggregate(product, recommendations,reviews,
-            serviceUtil.getServiceAddress());
+        return createProductAggregate(product, recommendations,reviews, serviceUtil.getServiceAddress());
+    }
 
+    @Override
+    public void deleteProduct(int productId) {
+        LOGGER.debug("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
+
+        integration.deleteProduct(productId);
+        integration.deleteRecommendations(productId);
+        integration.deleteReviews(productId);
+
+        LOGGER.debug("deleteCompositeProduct: aggregate entities deleted for productId: {}", productId);
     }
 
     private ProductAggregate createProductAggregate(
@@ -56,14 +100,14 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         List<RecommendationSummary> recommendationSummaries =
             (recommendations == null) ? null : recommendations
                 .stream()
-                .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate()))
+                .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate(), r.getContent()))
                 .collect(Collectors.toList());
 
         // 3. Copy summary review info, if available
         List<ReviewSummary> reviewSummaries =
             (reviews == null) ? null : reviews
                 .stream()
-                .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject()))
+                .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject(), r.getContent()))
                 .collect(Collectors.toList());
 
         // 4. Create info regarding the involved microservices addresses

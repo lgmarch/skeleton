@@ -1,36 +1,39 @@
-package com.lmarch.api.core.review;
+package com.lmarch.microservices.core.review.persistence;
 
-public class Review {
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "reviews", indexes = {@Index(name = "reviews_unique_idx", unique = true, columnList = "productId,reviewId")})
+public class ReviewEntity {
+    @Id @GeneratedValue
+    private int id;
+
+    @Version
+    private int version;
+
     private int productId;
     private int reviewId;
     private String author;
     private String subject;
     private String content;
-    private String serviceAddress;
 
-    public Review() {
-        productId = 0;
-        reviewId = 0;
-        author = null;
-        subject = null;
-        content = null;
-        serviceAddress = null;
+    public ReviewEntity() {
     }
 
-    public Review(
-            int productId,
-            int reviewId,
-            String author,
-            String subject,
-            String content,
-            String serviceAddress) {
-
+    public ReviewEntity(int productId, int reviewId, String author, String subject, String content) {
         this.productId = productId;
         this.reviewId = reviewId;
         this.author = author;
         this.subject = subject;
         this.content = content;
-        this.serviceAddress = serviceAddress;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     public int getProductId() {
@@ -53,8 +56,12 @@ public class Review {
         return content;
     }
 
-    public String getServiceAddress() {
-        return serviceAddress;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public void setProductId(int productId) {
@@ -75,9 +82,5 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setServiceAddress(String serviceAddress) {
-        this.serviceAddress = serviceAddress;
     }
 }
